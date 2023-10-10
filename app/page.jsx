@@ -1,9 +1,10 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CarsFilterOption from "./components/Home/CarsFilterOption";
 import Hero from "./components/Home/Hero";
 import SearchInput from "./components/Home/SearchInput";
 import { getCarList } from "@/services";
+import CarList from "./components/Home/CarList";
 
 export default function Home() {
   const [carsList, setCarsList] = useState([]);
@@ -13,7 +14,7 @@ export default function Home() {
 
   const getCarList_ = async () => {
     const result = await getCarList();
-    setCarsList(result.carsList);
+    setCarsList(result.carLists);
   };
 
   return (
@@ -21,6 +22,7 @@ export default function Home() {
       <Hero />
       <SearchInput />
       <CarsFilterOption />
+      <CarList carsList={carsList} />
     </div>
   );
 }
