@@ -1,8 +1,10 @@
+import { BookCreateContext } from "@/context/BookingCreateContext";
 import { createBooking, getStoreLocations } from "@/services";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function Form({ car }) {
   const [storeLocation, setStoreLocation] = useState([]);
+  const { showToastMsg, setShowToastMsg } = useContext(BookCreateContext);
   const [formValue, setFormValue] = useState({
     location: "",
     pickUpDate: "",
@@ -19,7 +21,7 @@ export default function Form({ car }) {
 
   useEffect(() => {
     if (car) {
-      setFormValue({ ...formValue, carId: { connect: { id: car.id } } });
+      setFormValue({ ...formValue, carId: car.id });
     }
   }, [car]);
 
@@ -36,7 +38,9 @@ export default function Form({ car }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await createBooking(formValue);
-    console.log(formValue);
+    if (res) {
+      setShowToastMsg(true);
+    }
   };
 
   return (

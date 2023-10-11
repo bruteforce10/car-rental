@@ -6,14 +6,25 @@ import SearchInput from "./components/Home/SearchInput";
 import { getCarList } from "@/services";
 import CarList from "./components/Home/CarList";
 import orderBy from "lodash/orderBy";
+import ToastMsg from "./components/ToastMsg";
+import { BookCreateContext } from "@/context/BookingCreateContext";
 
 export default function Home() {
   const [carsList, setCarsList] = useState([]);
   const [carOrgList, setCarOrgList] = useState([]);
+  const [showToastMsg, setShowToastMsg] = useState(false);
 
   useEffect(() => {
     getCarList_();
   }, []);
+
+  useEffect(() => {
+    if (showToastMsg) {
+      setTimeout(() => {
+        setShowToastMsg(false);
+      }, 3000);
+    }
+  }, [showToastMsg]);
 
   const getCarList_ = async () => {
     const result = await getCarList();
@@ -37,14 +48,17 @@ export default function Home() {
 
   return (
     <div className="p-5 sm:px-10 md:px-20">
-      <Hero />
-      <SearchInput />
-      <CarsFilterOption
-        carsList={carOrgList}
-        setBrand={(value) => filterCarList(value)}
-        orderCarList={(value) => orderCarList(value)}
-      />
-      <CarList carsList={carsList} />
+      <BookCreateContext.Provider value={{ showToastMsg, setShowToastMsg }}>
+        <Hero />
+        <SearchInput />
+        <CarsFilterOption
+          carsList={carOrgList}
+          setBrand={(value) => filterCarList(value)}
+          orderCarList={(value) => orderCarList(value)}
+        />
+        <CarList carsList={carsList} />
+        {showToastMsg && <ToastMsg msg={"Booking Created Successfully"} />}
+      </BookCreateContext.Provider>
     </div>
   );
 }

@@ -46,19 +46,36 @@ export const getStoreLocations = async () => {
 };
 
 export const createBooking = async (formValue) => {
-  const mutationQuery = gql`
+  console.log(formValue);
+  const mutationQuery =
+    gql`
     mutation MyMutation {
       createBooking(
-        data: {
-          carId: { connect: { id: "" } }
-          contactNumber: ""
-          dropOffDate: ""
-          dropOffTime: ""
-          pickUpDate: ""
-          username: ""
-          pickUpTime: ""
-        }
-      )
+        data:  {userName: "` +
+    formValue.userName +
+    `", 
+      pickUpDate: "` +
+    formValue.pickUpDate +
+    `", 
+      pickUpTime: "` +
+    formValue.pickUpTime +
+    `", 
+      dropOffDate: "` +
+    formValue.dropOffDate +
+    `", 
+      dropOffTime: "` +
+    formValue.dropOffTime +
+    `", 
+      contactNumber: "` +
+    formValue.contactNumber +
+    `", 
+      carId: {connect: 
+        {id: "` +
+    formValue.carId +
+    `"}}}
+    ) {
+      id
+    }
     }
   `;
   const result = await request(
